@@ -59,7 +59,7 @@ is the shorter route.
 
 ```bash
 npm install
-npm run build        # -> dist/homehold-1.0.0.xpi
+npm run build        # -> dist/homehold-<version>.xpi
 ```
 
 ### 2. Install it in Firefox
@@ -92,8 +92,8 @@ To do it in CI instead, save the keys as repository secrets (`AMO_JWT_ISSUER`,
 `AMO_JWT_SECRET` under **Settings → Secrets and variables → Actions**) and run the **Sign**
 workflow from the Actions tab — the signed package comes back as a workflow artifact.
 
-Set a real extension ID first (see [Packaging](#packaging)): signing registers the ID with
-Mozilla, and the `homehold@yourdomain.com` placeholder is not yours to register.
+Signing registers the extension ID with Mozilla, so settle the ID before the first signed
+release — see [Packaging](#packaging).
 
 ### 3. Configure it in the browser
 
@@ -202,16 +202,17 @@ The ignore list lives in `.web-ext-config.mjs` and is shared by both `lint` and 
 the linter and the packager can never disagree about what the extension contains. Note the
 `.xpi` is deliberately *not* committed — `dist/` is gitignored, and CI rebuilds it.
 
-Before publishing, change `browser_specific_settings.gecko.id` in `manifest.json` from the
-`homehold@yourdomain.com` placeholder to an ID you control.
+The extension ID is `homehold@chenghao999.github.io`, set in
+`browser_specific_settings.gecko.id`. Treat it as permanent: once it is registered with
+Mozilla, a different ID is a different add-on, and existing installs will not follow it.
 
 ### Publishing a release
 
 Push a `v*` tag and CI attaches the `.xpi` to a GitHub Release automatically:
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+git tag v1.0.1
+git push origin v1.0.1
 ```
 
 `web-ext lint` reports two advisory warnings on a clean checkout: `strict_min_version` is

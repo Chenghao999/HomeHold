@@ -56,7 +56,7 @@ ZIP——也就是你要安装的那个文件。
 
 ```bash
 npm install
-npm run build        # -> dist/homehold-1.0.0.xpi
+npm run build        # -> dist/homehold-<版本>.xpi
 ```
 
 ### 2. 装进 Firefox
@@ -87,8 +87,7 @@ npm run sign -- --api-key="$AMO_JWT_ISSUER" --api-secret="$AMO_JWT_SECRET"
 里的 `AMO_JWT_ISSUER`、`AMO_JWT_SECRET`），然后在 Actions 页面手动运行 **Sign**
 工作流，签名后的包会作为 workflow artifact 返回。
 
-请先设置一个真正属于你的扩展 ID（见[打包](#打包)）：签名会把该 ID 注册到 Mozilla，而
-`homehold@yourdomain.com` 这个占位值并不是你能注册的。
+签名会把扩展 ID 注册到 Mozilla，所以请在第一次签发版本之前就把 ID 定下来——见[打包](#打包)。
 
 ### 3. 在浏览器里配置
 
@@ -189,16 +188,17 @@ npm run sign         # 签名版 .xpi，需要 AMO API 密钥（见「安装」�
 "扩展包含哪些文件"的判断永远不会出现分歧。注意 `.xpi` 是**故意不提交**的——`dist/`
 已在 gitignore 中，由 CI 重新构建。
 
-发布前，请把 `manifest.json` 里 `browser_specific_settings.gecko.id` 的占位值
-`homehold@yourdomain.com` 换成你自己掌控的 ID。
+扩展 ID 是 `homehold@chenghao999.github.io`，写在 `browser_specific_settings.gecko.id`
+里。请把它当作永久值：一旦注册到 Mozilla，换成别的 ID 就等于换了一个扩展，已安装的用户
+不会跟过来。
 
 ### 发布一个版本
 
 推一个 `v*` 标签，CI 会自动把 `.xpi` 附到 GitHub Release 上：
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+git tag v1.0.1
+git push origin v1.0.1
 ```
 
 在干净的检出上执行 `web-ext lint` 会有两条提示性警告：`strict_min_version` 是 `109.0`，

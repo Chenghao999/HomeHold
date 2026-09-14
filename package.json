@@ -1,6 +1,6 @@
 {
   "name": "homehold",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Keep your homepage: every new tab opens your own navigation page, in private windows too.",
   "private": true,
   "license": "MIT",
