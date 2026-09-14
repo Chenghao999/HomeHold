@@ -88,6 +88,13 @@ npm run sign -- --api-key="$AMO_JWT_ISSUER" --api-secret="$AMO_JWT_SECRET"
 
 The signed `.xpi` lands in `dist/` and installs permanently on any Firefox.
 
+To do it in CI instead, save the keys as repository secrets (`AMO_JWT_ISSUER`,
+`AMO_JWT_SECRET` under **Settings → Secrets and variables → Actions**) and run the **Sign**
+workflow from the Actions tab — the signed package comes back as a workflow artifact.
+
+Set a real extension ID first (see [Packaging](#packaging)): signing registers the ID with
+Mozilla, and the `homehold@yourdomain.com` placeholder is not yours to register.
+
 ### 3. Configure it in the browser
 
 Yes — everything is configured inside Firefox. There is no config file to edit.

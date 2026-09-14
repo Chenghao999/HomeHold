@@ -83,6 +83,13 @@ npm run sign -- --api-key="$AMO_JWT_ISSUER" --api-secret="$AMO_JWT_SECRET"
 
 签名后的 `.xpi` 会出现在 `dist/` 下，可以永久安装到任意 Firefox。
 
+如果想让 CI 代劳，把密钥存成仓库 secret（**Settings → Secrets and variables → Actions**
+里的 `AMO_JWT_ISSUER`、`AMO_JWT_SECRET`），然后在 Actions 页面手动运行 **Sign**
+工作流，签名后的包会作为 workflow artifact 返回。
+
+请先设置一个真正属于你的扩展 ID（见[打包](#打包)）：签名会把该 ID 注册到 Mozilla，而
+`homehold@yourdomain.com` 这个占位值并不是你能注册的。
+
 ### 3. 在浏览器里配置
 
 可以——所有配置都在 Firefox 里完成，不需要编辑任何配置文件。

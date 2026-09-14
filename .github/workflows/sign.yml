@@ -1,0 +1,55 @@
+name: Sign
+
+# Signs the built package with Mozilla, producing an .xpi that installs
+# permanently on any Firefox - release and beta included.
+#
+# Run it by hand from the Actions tab. It needs two repository secrets:
+#
+#   AMO_JWT_ISSUER, AMO_JWT_SECRET
+#
+# Create them once at https://addons.mozilla.org/developers/addon/api/key/
+# The "unlisted" channel signs the package without publishing it in the
+# add-on store, so this stays a private distribution channel.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Fails with an actionable message rather than a cryptic 401 from AMO.
+      - name: Check the AMO credentials are configured
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          if [ -z "$AMO_JWT_ISSUER" ] || [ -z "$AMO_JWT_SECRET" ]; then
+            echo "::error::Add AMO_JWT_ISSUER and AMO_JWT_SECRET under Settings -> Secrets and variables -> Actions. Create them at https://addons.mozilla.org/developers/addon/api/key/"
+            exit 1
+          fi
+
+      - name: Sign the package
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: npm run sign -- --api-key="$AMO_JWT_ISSUER" --api-secret="$AMO_JWT_SECRET"
+
+      - name: Upload the signed package
+        uses: actions/upload-artifact@v4
+        with:
+          name: homehold-signed-xpi
+          path: dist/*.xpi
+          if-no-files-found: error
