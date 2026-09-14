@@ -1,0 +1,80 @@
+{
+  "extensionDescription": {
+    "message": "守住你的主页：新标签页始终打开你自己的导航页，隐私窗口也不例外。"
+  },
+
+  "noticeTitle": {
+    "message": "HomeHold"
+  },
+  "noticeNotConfigured": {
+    "message": "尚未配置导航页。请打开设置，填入你希望每个新标签页打开的地址。"
+  },
+  "noticeDisabled": {
+    "message": "HomeHold 已停用。重新开启之前，新标签页不会被跳转。"
+  },
+  "noticeReadFailed": {
+    "message": "读取配置失败：$ERROR$",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "storage is unavailable"
+      }
+    }
+  },
+  "openSettings": {
+    "message": "打开设置"
+  },
+
+  "optionsTitle": {
+    "message": "HomeHold 设置"
+  },
+  "optionsHeading": {
+    "message": "HomeHold"
+  },
+  "optionsTagline": {
+    "message": "每个新标签页都打开你自己的导航页。"
+  },
+  "navUrlLabel": {
+    "message": "导航页地址"
+  },
+  "navUrlPlaceholder": {
+    "message": "https://example.com"
+  },
+  "navUrlHelp": {
+    "message": "必须以 http:// 或 https:// 开头"
+  },
+  "enabledLabel": {
+    "message": "启用 HomeHold"
+  },
+  "enabledHelp": {
+    "message": "关闭后，新标签页会显示一条提示，而不是跳转。"
+  },
+  "saveButton": {
+    "message": "保存"
+  },
+  "savedMessage": {
+    "message": "已保存"
+  },
+  "invalidUrlMessage": {
+    "message": "请输入以 http:// 或 https:// 开头的地址"
+  },
+  "readFailedMessage": {
+    "message": "读取已保存的配置失败。"
+  },
+  "writeFailedMessage": {
+    "message": "保存配置失败。"
+  },
+
+  "incognitoAllowed": {
+    "message": "已允许在隐私窗口中运行"
+  },
+  "incognitoDenied": {
+    "message": "未允许在隐私窗口中运行"
+  },
+  "incognitoHelpDenied": {
+    "message": "开启方法：about:addons → HomeHold → 权限 → 勾选「在隐私窗口中运行」。"
+  },
+  "incognitoUnknown": {
+    "message": "无法检测隐私窗口权限。"
+  }
+}

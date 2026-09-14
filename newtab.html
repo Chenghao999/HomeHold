@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>HomeHold</title>
+    <link rel="stylesheet" href="newtab.css" />
+  </head>
+  <body>
+    <main class="notice" id="notice" hidden>
+      <h1 class="notice__title" data-i18n="noticeTitle">HomeHold</h1>
+      <p class="notice__text" id="noticeText"></p>
+      <button class="notice__button" id="openSettings" type="button" data-i18n="openSettings"></button>
+    </main>
+
+    <!-- Order matters: config.js defines the URL rule, i18n.js the lookup. -->
+    <script src="config.js"></script>
+    <script src="i18n.js"></script>
+    <script src="newtab.js"></script>
+  </body>
+</html>

@@ -1,0 +1,80 @@
+{
+  "extensionDescription": {
+    "message": "Keep your homepage: every new tab opens your own navigation page, in private windows too."
+  },
+
+  "noticeTitle": {
+    "message": "HomeHold"
+  },
+  "noticeNotConfigured": {
+    "message": "No navigation page configured yet. Open the settings and enter the address you want every new tab to open."
+  },
+  "noticeDisabled": {
+    "message": "HomeHold is turned off. New tabs will not be redirected until you switch it back on."
+  },
+  "noticeReadFailed": {
+    "message": "Could not read the saved settings: $ERROR$",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "storage is unavailable"
+      }
+    }
+  },
+  "openSettings": {
+    "message": "Open settings"
+  },
+
+  "optionsTitle": {
+    "message": "HomeHold settings"
+  },
+  "optionsHeading": {
+    "message": "HomeHold"
+  },
+  "optionsTagline": {
+    "message": "Every new tab opens your own navigation page."
+  },
+  "navUrlLabel": {
+    "message": "Navigation page URL"
+  },
+  "navUrlPlaceholder": {
+    "message": "https://example.com"
+  },
+  "navUrlHelp": {
+    "message": "Must start with http:// or https://"
+  },
+  "enabledLabel": {
+    "message": "Enable HomeHold"
+  },
+  "enabledHelp": {
+    "message": "When off, new tabs show a short notice instead of redirecting."
+  },
+  "saveButton": {
+    "message": "Save"
+  },
+  "savedMessage": {
+    "message": "Saved"
+  },
+  "invalidUrlMessage": {
+    "message": "Please enter an address starting with http:// or https://"
+  },
+  "readFailedMessage": {
+    "message": "Could not read the saved settings."
+  },
+  "writeFailedMessage": {
+    "message": "Could not save the settings."
+  },
+
+  "incognitoAllowed": {
+    "message": "Allowed to run in private windows"
+  },
+  "incognitoDenied": {
+    "message": "Not allowed to run in private windows"
+  },
+  "incognitoHelpDenied": {
+    "message": "To turn it on: about:addons → HomeHold → Permissions → enable \"Run in Private Windows\"."
+  },
+  "incognitoUnknown": {
+    "message": "Could not detect the private-window permission."
+  }
+}
