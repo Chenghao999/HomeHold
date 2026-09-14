@@ -163,5 +163,7 @@ run and do not need the older versions.
 
 ## License
 
-No license has been chosen yet, so all rights are reserved by default. Add a `LICENSE`
-file before distributing or accepting contributions.
+[MIT](LICENSE) © 2026 Chenghao999
+
+You are free to use, modify and redistribute this code, including commercially, as long as
+the copyright notice and permission notice are kept. The software comes with no warranty.
