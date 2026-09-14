@@ -52,6 +52,9 @@
   "saveButton": {
     "message": "Save"
   },
+  "moreSettings": {
+    "message": "More settings"
+  },
   "savedMessage": {
     "message": "Saved"
   },

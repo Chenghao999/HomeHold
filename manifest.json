@@ -17,6 +17,14 @@
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
+  "action": {
+    "default_title": "HomeHold",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "96": "icons/icon-96.png"
+    }
+  },
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true

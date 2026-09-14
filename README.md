@@ -14,6 +14,7 @@ account. Your configuration stays in `browser.storage.local` on your own machine
 
 | | |
 |---|---|
+| **Configure** | Click the toolbar icon — no config file to edit |
 | **New tab** | Redirects to your navigation page |
 | **Private windows** | Works too, once you grant the permission (see below) |
 | **Storage** | `browser.storage.local` — local only, never uploaded |
@@ -72,13 +73,9 @@ The signed `.xpi` lands in `dist/` and installs permanently on any Firefox.
 
 Yes — everything is configured inside Firefox. There is no config file to edit.
 
-Open the settings page either way:
-
-- `about:addons` → **HomeHold** → **Preferences**, or
-- click **Open settings** on the new tab page, shown until an address is configured
-
-Enter the address every new tab should open, press **Save**, and open a new tab. Settings
-live in the browser's local extension storage and take effect immediately — no restart.
+Click the **HomeHold icon in the toolbar**, type the address, press **Save**. The setting
+is stored in Firefox's extension storage and applies to the next new tab — no restart. See
+[Usage](#usage) for the full settings page.
 
 ### For development
 
@@ -95,11 +92,20 @@ and select `manifest.json`.
 
 ## Usage
 
-1. Open the settings page — `about:addons` → HomeHold → **Preferences**, or the
-   **Open settings** button shown on the new tab page before you have configured anything.
-2. Enter the address you want every new tab to open. It must start with `http://` or
-   `https://`.
-3. Press **Save**, then open a new tab.
+There is no configuration file. Everything is set from inside Firefox.
+
+**The quick way — the toolbar popup.** Click the HomeHold icon in the toolbar, type the
+address, press **Save** (or just Enter). That is the whole flow: the setting is written to
+the browser's extension storage and applies to the next new tab you open, with no restart.
+
+**The full settings page.** Click **More settings** in the popup, or go to `about:addons`
+→ HomeHold → **Preferences**. Same fields, plus the private-window permission readout.
+The new tab page also carries an **Open settings** button whenever it cannot redirect —
+before an address is configured, or when HomeHold is switched off.
+
+Addresses must start with `http://` or `https://`. Anything else — `javascript:`, `data:`,
+`file:` — is refused rather than stored, so a saved value can never turn into script
+execution or local file access.
 
 ### Private windows
 
@@ -127,7 +133,8 @@ add-on picks it up on reload.
 ├── config.js                # Shared config defaults + URL validation
 ├── i18n.js                  # data-i18n DOM localization helper
 ├── newtab.html/.js/.css     # The overridden new tab page
-├── options.html/.js/.css    # Settings page
+├── popup.html/.js/.css      # Toolbar popup (quick URL edit)
+├── options.html/.js/.css    # Full settings page
 ├── _locales/
 │   ├── en/messages.json     # English strings (default locale)
 │   └── zh_CN/messages.json  # Simplified Chinese strings

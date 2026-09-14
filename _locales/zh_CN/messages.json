@@ -52,6 +52,9 @@
   "saveButton": {
     "message": "保存"
   },
+  "moreSettings": {
+    "message": "更多设置"
+  },
   "savedMessage": {
     "message": "已保存"
   },

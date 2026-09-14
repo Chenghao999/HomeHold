@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title data-i18n="optionsTitle">HomeHold settings</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h1 class="popup__title" data-i18n="optionsHeading">HomeHold</h1>
+
+    <div class="field">
+      <label class="field__label" for="navUrl" data-i18n="navUrlLabel"></label>
+      <input
+        class="field__input"
+        id="navUrl"
+        type="url"
+        spellcheck="false"
+        autocomplete="off"
+        data-i18n-placeholder="navUrlPlaceholder"
+      />
+    </div>
+
+    <div class="field field--row">
+      <input class="field__checkbox" id="enabled" type="checkbox" />
+      <label class="field__label" for="enabled" data-i18n="enabledLabel"></label>
+    </div>
+
+    <div class="actions">
+      <button class="button" id="save" type="button" data-i18n="saveButton"></button>
+      <span class="message" id="message" role="status" aria-live="polite"></span>
+    </div>
+
+    <a class="popup__link" id="moreSettings" href="#" data-i18n="moreSettings"></a>
+
+    <!-- Order matters: config.js defines the URL rule, i18n.js the lookup. -->
+    <script src="config.js"></script>
+    <script src="i18n.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
