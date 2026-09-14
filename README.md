@@ -24,27 +24,72 @@ account. Your configuration stays in `browser.storage.local` on your own machine
 
 ## Install
 
-### From source (temporary, for development)
+### 1. Get the package
+
+Building produces a **`.xpi`** file. That is Firefox's extension package format — a ZIP
+with an `.xpi` extension — and it is the file you install.
+
+**Download a build.** Every push to `main` builds one. Open the
+[Actions tab](https://github.com/Chenghao999/HomeHold/actions), pick the newest **Build**
+run, and download the **homehold-xpi** artifact. Tagged releases also attach the `.xpi`
+directly to the [Releases page](https://github.com/Chenghao999/HomeHold/releases), which
+is the shorter route.
+
+**Or build it locally:**
 
 ```bash
-git clone https://github.com/Chenghao999/HomeHold.git
-cd HomeHold
+npm install
+npm run build        # -> dist/homehold-1.0.0.xpi
 ```
 
-Then open `about:debugging#/runtime/this-firefox` in Firefox, click **Load Temporary
-Add-on…**, and select `manifest.json`. The extension stays loaded until you restart
-Firefox. Signing is required for a permanent install — see [Packaging](#packaging).
+### 2. Install it in Firefox
 
-### With web-ext (auto-reloading dev loop)
+Firefox only installs an **unsigned** package temporarily, so the right method depends on
+which Firefox you run:
+
+| Package | How to install | Lasts |
+|---|---|---|
+| Unsigned | `about:debugging` → **This Firefox** → **Load Temporary Add-on…** → pick the `.xpi` | Until Firefox restarts |
+| Signed | Any Firefox: `about:addons` → gear icon → **Install Add-on From File…** | Permanently |
+| Unsigned | **Developer Edition / Nightly / ESR**: `about:addons` → gear icon → **Install Add-on From File…** | Permanently |
+
+Regular Firefox (release and beta) refuses to install an unsigned package permanently —
+it reports the file as corrupt. That is a Firefox security rule, not a problem with the
+build.
+
+To get a signed `.xpi`, upload the package to Mozilla for signing. It is free, and the
+`unlisted` channel means the extension is signed but **not** published in the add-on
+store:
 
 ```bash
-npm install --global web-ext
-cd HomeHold
-web-ext run
+# Create API keys once: https://addons.mozilla.org/developers/addon/api/key/
+npm run sign -- --api-key="$AMO_JWT_ISSUER" --api-secret="$AMO_JWT_SECRET"
 ```
 
-`web-ext run` launches a clean Firefox profile with the extension loaded and reloads it
-whenever a source file changes. Add `--firefox-profile <name>` to reuse your own profile.
+The signed `.xpi` lands in `dist/` and installs permanently on any Firefox.
+
+### 3. Configure it in the browser
+
+Yes — everything is configured inside Firefox. There is no config file to edit.
+
+Open the settings page either way:
+
+- `about:addons` → **HomeHold** → **Preferences**, or
+- click **Open settings** on the new tab page, shown until an address is configured
+
+Enter the address every new tab should open, press **Save**, and open a new tab. Settings
+live in the browser's local extension storage and take effect immediately — no restart.
+
+### For development
+
+```bash
+npm install
+npm start            # web-ext run: clean profile, auto-reloads on save
+```
+
+Add `-- --firefox-profile <name>` to reuse your own profile. To load the unpacked source
+instead, open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on…**
+and select `manifest.json`.
 
 ---
 
@@ -71,8 +116,9 @@ new tab page.
 
 ## Development
 
-The extension is plain JavaScript with no build step and no dependencies. Edit a file,
-reload the add-on in `about:debugging`, and the change is live.
+The extension itself is plain JavaScript — no build step, no framework, no runtime
+dependencies. `npm` is only used to run the packaging tools. Edit a file and the running
+add-on picks it up on reload.
 
 ```
 .
@@ -86,7 +132,10 @@ reload the add-on in `about:debugging`, and the change is live.
 │   ├── en/messages.json     # English strings (default locale)
 │   └── zh_CN/messages.json  # Simplified Chinese strings
 ├── icons/                   # icon-48.png, icon-96.png
-└── tools/make-icons.py      # Regenerates the icons
+├── tools/make-icons.py      # Regenerates the icons
+├── scripts/build.sh         # Builds dist/homehold-<version>.xpi
+├── .web-ext-config.mjs      # Shared web-ext settings (what ships, what doesn't)
+└── .github/workflows/       # CI: builds the .xpi on every push
 ```
 
 ### Localization
@@ -111,12 +160,26 @@ emit additional sizes.
 ### Packaging
 
 ```bash
-web-ext lint                # static checks
-web-ext build               # writes a zip to web-ext-artifacts/
+npm run lint         # static checks
+npm run build        # -> dist/homehold-<version>.xpi
+npm run sign         # signed .xpi, needs AMO API keys (see Install)
 ```
+
+The ignore list lives in `.web-ext-config.mjs` and is shared by both `lint` and `build`, so
+the linter and the packager can never disagree about what the extension contains. Note the
+`.xpi` is deliberately *not* committed — `dist/` is gitignored, and CI rebuilds it.
 
 Before publishing, change `browser_specific_settings.gecko.id` in `manifest.json` from the
 `homehold@yourdomain.com` placeholder to an ID you control.
+
+### Publishing a release
+
+Push a `v*` tag and CI attaches the `.xpi` to a GitHub Release automatically:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
 
 `web-ext lint` reports two advisory warnings on a clean checkout: `strict_min_version` is
 `109.0`, but `data_collection_permissions` was only introduced in Firefox 140. The property

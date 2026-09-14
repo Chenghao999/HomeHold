@@ -24,27 +24,69 @@ HomeHold 是一个小巧的 Firefox 扩展（Manifest V3）。它接管新标签
 
 ## 安装
 
-### 从源码加载（临时，用于开发）
+### 1. 拿到安装包
+
+打包产物是一个 **`.xpi`** 文件。这就是 Firefox 的扩展包格式——本质是一个改了后缀名的
+ZIP——也就是你要安装的那个文件。
+
+**直接下载。** 每次推送到 `main` 都会自动构建一次。打开
+[Actions 页面](https://github.com/Chenghao999/HomeHold/actions)，点进最新一次 **Build**
+运行，下载 **homehold-xpi** 这个 artifact。打标签发布的版本还会把 `.xpi` 直接附到
+[Releases 页面](https://github.com/Chenghao999/HomeHold/releases)上，那条路更短。
+
+**或者本地自己构建：**
 
 ```bash
-git clone https://github.com/Chenghao999/HomeHold.git
-cd HomeHold
+npm install
+npm run build        # -> dist/homehold-1.0.0.xpi
 ```
 
-然后在 Firefox 中打开 `about:debugging#/runtime/this-firefox`，点击
-**临时载入附加组件…**，选择 `manifest.json`。扩展会一直生效，直到你重启 Firefox。
-永久安装需要签名，见[打包](#打包)。
+### 2. 装进 Firefox
 
-### 使用 web-ext（自动重载的开发流程）
+Firefox 对**未签名**的包只允许临时安装，所以用哪种方式取决于你用的是哪个版本的
+Firefox：
+
+| 包 | 安装方式 | 有效期 |
+|---|---|---|
+| 未签名 | `about:debugging` → **本 Firefox** → **临时载入附加组件…** → 选择 `.xpi` | 重启 Firefox 即失效 |
+| 已签名 | 任意 Firefox：`about:addons` → 齿轮图标 → **从文件安装附加组件…** | 永久 |
+| 未签名 | **开发者版 / Nightly / ESR**：`about:addons` → 齿轮图标 → **从文件安装附加组件…** | 永久 |
+
+正式版和 Beta 版的 Firefox 会拒绝永久安装未签名的包，报"文件似乎已损坏"。这是 Firefox
+的安全策略，不是构建出了问题。
+
+要拿到签名的 `.xpi`，把包提交给 Mozilla 签名即可。这一步免费，而且选择 `unlisted`
+渠道意味着扩展会被签名，但**不会**公开上架到扩展商店：
 
 ```bash
-npm install --global web-ext
-cd HomeHold
-web-ext run
+# 先在这里创建一次 API 密钥：https://addons.mozilla.org/developers/addon/api/key/
+npm run sign -- --api-key="$AMO_JWT_ISSUER" --api-secret="$AMO_JWT_SECRET"
 ```
 
-`web-ext run` 会启动一个干净的 Firefox 配置文件并载入扩展，源码变动时自动重载。加上
-`--firefox-profile <名称>` 可以复用你自己的配置文件。
+签名后的 `.xpi` 会出现在 `dist/` 下，可以永久安装到任意 Firefox。
+
+### 3. 在浏览器里配置
+
+可以——所有配置都在 Firefox 里完成，不需要编辑任何配置文件。
+
+两种方式都能打开设置页：
+
+- `about:addons` → **HomeHold** → **首选项**
+- 或者点击新标签页上的 **打开设置** 按钮（配置好地址之前会一直显示）
+
+填入你希望每个新标签页打开的地址，点 **保存**，然后打开一个新标签页即可。配置保存在
+浏览器的扩展本地存储中，立即生效，无需重启。
+
+### 开发调试
+
+```bash
+npm install
+npm start            # web-ext run：干净的配置文件，改动即自动重载
+```
+
+加上 `-- --firefox-profile <名称>` 可以复用你自己的配置文件。如果想直接加载未打包的
+源码，打开 `about:debugging#/runtime/this-firefox`，点 **临时载入附加组件…**，选择
+`manifest.json`。
 
 ---
 
@@ -68,8 +110,8 @@ Firefox 不允许扩展自己给自己授予隐私窗口权限——必须由你
 
 ## 开发
 
-扩展是纯 JavaScript，没有构建步骤，也没有任何依赖。改完文件后在 `about:debugging` 里
-重新载入附加组件即可生效。
+扩展本身是纯 JavaScript——没有构建步骤、没有框架、没有运行时依赖。`npm` 只用来跑打包
+工具。改完文件重新载入附加组件即可生效。
 
 ```
 .
@@ -83,7 +125,10 @@ Firefox 不允许扩展自己给自己授予隐私窗口权限——必须由你
 │   ├── en/messages.json     # 英文字符串（默认语言）
 │   └── zh_CN/messages.json  # 简体中文字符串
 ├── icons/                   # icon-48.png、icon-96.png
-└── tools/make-icons.py      # 重新生成图标
+├── tools/make-icons.py      # 重新生成图标
+├── scripts/build.sh         # 构建 dist/homehold-<版本>.xpi
+├── .web-ext-config.mjs      # web-ext 共享配置（哪些进包、哪些不进）
+└── .github/workflows/       # CI：每次推送自动构建 .xpi
 ```
 
 ### 多语言
@@ -106,12 +151,26 @@ python3 tools/make-icons.py
 ### 打包
 
 ```bash
-web-ext lint                # 静态检查
-web-ext build               # 在 web-ext-artifacts/ 下生成 zip
+npm run lint         # 静态检查
+npm run build        # -> dist/homehold-<版本>.xpi
+npm run sign         # 签名版 .xpi，需要 AMO API 密钥（见「安装」）
 ```
+
+忽略清单写在 `.web-ext-config.mjs` 里，`lint` 和 `build` 共用，所以检查器和打包器对
+"扩展包含哪些文件"的判断永远不会出现分歧。注意 `.xpi` 是**故意不提交**的——`dist/`
+已在 gitignore 中，由 CI 重新构建。
 
 发布前，请把 `manifest.json` 里 `browser_specific_settings.gecko.id` 的占位值
 `homehold@yourdomain.com` 换成你自己掌控的 ID。
+
+### 发布一个版本
+
+推一个 `v*` 标签，CI 会自动把 `.xpi` 附到 GitHub Release 上：
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
 
 在干净的检出上执行 `web-ext lint` 会有两条提示性警告：`strict_min_version` 是 `109.0`，
 而 `data_collection_permissions` 直到 Firefox 140 才引入。该属性是增量式的——旧版本会
