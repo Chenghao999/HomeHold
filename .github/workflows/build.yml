@@ -1,7 +1,12 @@
 name: Build
 
-# Produces a downloadable homehold-<version>.xpi on every push, and attaches it
-# to a GitHub Release when a v* tag is pushed.
+# Builds the package on every push, and publishes a downloadable release when a
+# v* tag is pushed.
+#
+# Tagged releases are signed with Mozilla when the AMO_JWT_ISSUER and
+# AMO_JWT_SECRET secrets are configured (create them at
+# https://addons.mozilla.org/developers/addon/api/key/). Without them the
+# release still happens, just unsigned.
 
 on:
   push:
@@ -39,21 +44,61 @@ jobs:
           path: dist/*.xpi
           if-no-files-found: error
 
-      # A v* tag turns the artifact into a Release asset, which is the file to
-      # hand to someone who just wants to install the extension.
+  publish:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    env:
+      AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+      AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Sign with Mozilla
+        if: env.AMO_JWT_ISSUER != ''
+        run: npm run sign -- --api-key="$AMO_JWT_ISSUER" --api-secret="$AMO_JWT_SECRET"
+
+      # web-ext sign names its output after the add-on, so rather than guess the
+      # filename, look for the package that actually carries a signature.
       #
-      # The versioned copy is the archive; the unversioned one exists so the
-      # link .../releases/latest/download/homehold.xpi keeps working after the
+      # The unversioned copy exists so that
+      # .../releases/latest/download/homehold.xpi keeps resolving after the
       # version number moves on.
-      - name: Give the asset a stable name
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: cp dist/homehold-*.xpi dist/homehold.xpi
+      - name: Collect the release asset
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./manifest.json').version")"
+          mkdir -p release
+
+          pkg=""
+          for f in dist/*.xpi; do
+            [ -e "$f" ] || continue
+            if unzip -l "$f" | grep -q "META-INF/"; then
+              pkg="$f"
+              break
+            fi
+          done
+
+          if [ -z "$pkg" ]; then
+            echo "No signed package found - publishing an unsigned build."
+            npm run build
+            pkg="dist/homehold-${VERSION}.xpi"
+          else
+            echo "Signing produced $(basename "$pkg")."
+          fi
+
+          cp "$pkg" "release/homehold-${VERSION}.xpi"
+          cp "$pkg" "release/homehold.xpi"
 
       - name: Attach to the release
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            dist/homehold-*.xpi
-            dist/homehold.xpi
+          files: release/*.xpi
           generate_release_notes: true
