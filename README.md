@@ -10,6 +10,25 @@ account. Your configuration stays in `browser.storage.local` on your own machine
 
 ---
 
+## Download
+
+**[⬇ Download `homehold.xpi`](https://github.com/Chenghao999/HomeHold/releases/latest/download/homehold.xpi)**
+
+That link always serves the newest build — nothing to compile, no npm, no Node. Then in
+Firefox: `about:addons` → gear icon → **Install Add-on From File…** → pick the file.
+
+> **The download is unsigned.** Firefox Developer Edition, Nightly and ESR install it
+> permanently. Regular Firefox (release/beta) refuses unsigned packages permanently and
+> reports the file as corrupt instead — that is Mozilla's security rule, not a broken
+> package. On regular Firefox you can either load it temporarily via `about:debugging`, or
+> [sign it](#2-install-it-in-firefox) (free, produces a package that installs anywhere with
+> one click).
+
+Every release is also listed on the [Releases page](https://github.com/Chenghao999/HomeHold/releases),
+and CI rebuilds the package on every push.
+
+---
+
 ## What it does
 
 | | |

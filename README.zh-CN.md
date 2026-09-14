@@ -10,6 +10,23 @@ HomeHold 是一个小巧的 Firefox 扩展（Manifest V3）。它接管新标签
 
 ---
 
+## 下载
+
+**[⬇ 下载 `homehold.xpi`](https://github.com/Chenghao999/HomeHold/releases/latest/download/homehold.xpi)**
+
+这个链接永远指向最新构建——不用编译、不用 npm、不用装 Node。下载后在 Firefox 里：
+`about:addons` → 齿轮图标 → **从文件安装附加组件…** → 选择该文件。
+
+> **下载的是未签名版本。** Firefox 开发者版、Nightly 和 ESR 可以永久安装。正式版和
+> Beta 版会拒绝永久安装未签名的包，报"文件似乎已损坏"——这是 Mozilla 的安全策略，不是
+> 包坏了。在正式版上你可以先用 `about:debugging` 临时加载，或者[给它签名](#2-装进-firefox)
+> （免费，签完可以在任意 Firefox 上一键安装）。
+
+每个版本也都会列在 [Releases 页面](https://github.com/Chenghao999/HomeHold/releases)上，
+CI 每次推送都会重新构建。
+
+---
+
 ## 功能一览
 
 | | |

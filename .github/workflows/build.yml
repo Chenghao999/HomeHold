@@ -41,9 +41,19 @@ jobs:
 
       # A v* tag turns the artifact into a Release asset, which is the file to
       # hand to someone who just wants to install the extension.
+      #
+      # The versioned copy is the archive; the unversioned one exists so the
+      # link .../releases/latest/download/homehold.xpi keeps working after the
+      # version number moves on.
+      - name: Give the asset a stable name
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: cp dist/homehold-*.xpi dist/homehold.xpi
+
       - name: Attach to the release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.xpi
+          files: |
+            dist/homehold-*.xpi
+            dist/homehold.xpi
           generate_release_notes: true
