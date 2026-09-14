@@ -77,10 +77,15 @@ jobs:
           VERSION="$(node -p "require('./manifest.json').version")"
           mkdir -p release
 
+          # Note: `unzip -l "$f" | grep -q` would look right but always fail
+          # here. grep -q exits at the first match, unzip dies of SIGPIPE, and
+          # pipefail turns that into a non-zero pipeline, so the branch never
+          # fires. Match against captured output instead.
           pkg=""
           for f in dist/*.xpi; do
             [ -e "$f" ] || continue
-            if unzip -l "$f" | grep -q "META-INF/"; then
+            listing="$(unzip -l "$f" 2>/dev/null || true)"
+            if [[ "$listing" == *"META-INF/"* ]]; then
               pkg="$f"
               break
             fi
