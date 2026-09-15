@@ -12,6 +12,11 @@ account. Your configuration stays in `browser.storage.local` on your own machine
 
 ## Download
 
+> **Firefox only.** This is a Firefox extension. Chrome, Edge and Safari cannot install it,
+> and double-clicking the `.xpi` on a machine with no Firefox installed does nothing at all
+> — there is no application registered for the file type. Install
+> [Firefox](https://www.mozilla.org/firefox/) first.
+
 **[⬇ Download `homehold.xpi`](https://github.com/Chenghao999/HomeHold/releases/latest/download/homehold.xpi)**
 
 That link always serves the newest build — nothing to compile, no npm, no Node. Then in
@@ -36,6 +41,9 @@ and CI rebuilds the package on every push.
 | **Configure** | Click the toolbar icon — no config file to edit |
 | **New tab** | Redirects to your navigation page |
 | **Private windows** | Works too, once you grant the permission (see below) |
+| **Theme** | Follows your system by default, or force light/dark |
+| **Notice page** | Your own heading and text when a new tab cannot redirect |
+| **Backup** | Export and import your settings as a JSON file |
 | **Storage** | `browser.storage.local` — local only, never uploaded |
 | **Permissions** | `storage` only |
 | **Requires** | Firefox 109+ |
@@ -133,6 +141,39 @@ Addresses must start with `http://` or `https://`. Anything else — `javascript
 `file:` — is refused rather than stored, so a saved value can never turn into script
 execution or local file access.
 
+One **Save** button covers every field on the settings page, including the ones below.
+
+### Appearance
+
+The theme defaults to **Match system**, which follows your operating system. Choose
+**Light** or **Dark** to override it — useful when you want a dark browser UI regardless of
+what the OS is set to, or the other way round.
+
+The choice applies to all three of HomeHold's surfaces: the new tab notice, the toolbar
+popup, and the settings page. Changing the dropdown previews it immediately; it is written
+to storage when you press **Save**.
+
+### The notice page
+
+When a new tab cannot be redirected — no address configured yet, or HomeHold switched off —
+you get a notice explaining why. Both the heading and the body can be replaced with your
+own text, which is handy if you would rather see a reminder than a diagnostic.
+
+Leave either field empty to keep the default wording, which is translated into your
+browser's language. The **Open settings** button stays either way, so a customised notice
+cannot lock you out of the settings.
+
+### Backup
+
+**Export** downloads your current settings as `homehold-settings.json`. **Import** reads
+such a file back and applies it immediately — it replaces everything on the page rather
+than merging, and the fields above update to show what was loaded.
+
+An imported file is treated as untrusted input, not as truth. A URL that fails the
+`http(s)` rule is dropped, an unrecognised theme falls back to `auto`, over-long notice
+text is trimmed, and a JSON file that carries none of HomeHold's settings is refused
+outright rather than silently resetting everything to defaults.
+
 ### Private windows
 
 Firefox does not let an extension grant itself private-window access — you have to turn it
@@ -156,7 +197,8 @@ add-on picks it up on reload.
 .
 ├── manifest.json            # Extension declaration
 ├── background.js            # Private-window permission check (background)
-├── config.js                # Shared config defaults + URL validation
+├── defaults.js              # Shared config defaults, URL rule, import/export
+├── theme.js                 # Applies the stored light/dark choice before paint
 ├── i18n.js                  # data-i18n DOM localization helper
 ├── newtab.html/.js/.css     # The overridden new tab page
 ├── popup.html/.js/.css      # Toolbar popup (quick URL edit)
@@ -250,11 +292,14 @@ run and do not need the older versions.
 
 ## Roadmap
 
-- **v1.1** — Multiple navigation pages with a keyboard shortcut to switch
-- **v1.2** — Configuration import/export
-- **v1.3** — `storage.sync` cross-device sync
-- **v1.4** — Generate a navigation page from bookmarks
-- **v2.0** — Optional dark theme and a customizable notice page
+Shipped in **1.1.0**: settings import/export, a light/dark override, and a customizable
+notice page.
+
+Still open, in rough order of usefulness:
+
+- `storage.sync` cross-device sync
+- Multiple navigation pages with a keyboard shortcut to switch
+- Generate a navigation page from bookmarks
 
 ---
 
