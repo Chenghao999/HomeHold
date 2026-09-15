@@ -68,6 +68,62 @@
     "message": "Could not save the settings."
   },
 
+  "appearanceHeading": {
+    "message": "Appearance"
+  },
+  "themeLabel": {
+    "message": "Theme"
+  },
+  "themeAuto": {
+    "message": "Match system"
+  },
+  "themeLight": {
+    "message": "Light"
+  },
+  "themeDark": {
+    "message": "Dark"
+  },
+  "themeHelp": {
+    "message": "Match system follows your operating system's light or dark setting."
+  },
+  "customNoticeTitleLabel": {
+    "message": "Notice heading"
+  },
+  "customNoticeTitlePlaceholder": {
+    "message": "HomeHold"
+  },
+  "customNoticeTitleHelp": {
+    "message": "Shown on the page a new tab falls back to. Leave empty to use the default."
+  },
+  "customNoticeMessageLabel": {
+    "message": "Notice text"
+  },
+  "customNoticeMessagePlaceholder": {
+    "message": "No navigation page configured yet."
+  },
+  "customNoticeMessageHelp": {
+    "message": "Replaces the explanation of why the tab was not redirected. Leave empty to use the default."
+  },
+
+  "backupHeading": {
+    "message": "Backup"
+  },
+  "backupHelp": {
+    "message": "Export saves your settings to a file. Import applies a file immediately and replaces everything on this page."
+  },
+  "exportButton": {
+    "message": "Export"
+  },
+  "importButton": {
+    "message": "Import"
+  },
+  "importedMessage": {
+    "message": "Settings imported"
+  },
+  "importFailedMessage": {
+    "message": "That file is not a HomeHold settings file."
+  },
+
   "incognitoAllowed": {
     "message": "Allowed to run in private windows"
   },

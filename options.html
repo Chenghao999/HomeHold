@@ -4,6 +4,10 @@
     <meta charset="utf-8" />
     <title data-i18n="optionsTitle">HomeHold settings</title>
     <link rel="stylesheet" href="options.css" />
+    <!-- defaults.js supplies the URL rule and the theme default; theme.js needs
+         both before the body paints. -->
+    <script src="defaults.js"></script>
+    <script src="theme.js"></script>
   </head>
   <body>
     <div class="page">
@@ -33,12 +37,64 @@
             <p class="field__help" data-i18n="enabledHelp"></p>
           </div>
         </div>
+      </main>
+
+      <section class="card">
+        <h2 class="card__title" data-i18n="appearanceHeading"></h2>
+
+        <div class="field">
+          <label class="field__label" for="theme" data-i18n="themeLabel"></label>
+          <select class="field__input" id="theme">
+            <option value="auto" data-i18n="themeAuto"></option>
+            <option value="light" data-i18n="themeLight"></option>
+            <option value="dark" data-i18n="themeDark"></option>
+          </select>
+          <p class="field__help" data-i18n="themeHelp"></p>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="noticeTitle" data-i18n="customNoticeTitleLabel"></label>
+          <input
+            class="field__input"
+            id="noticeTitle"
+            type="text"
+            autocomplete="off"
+            data-i18n-placeholder="customNoticeTitlePlaceholder"
+          />
+          <p class="field__help" data-i18n="customNoticeTitleHelp"></p>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="noticeMessage" data-i18n="customNoticeMessageLabel"></label>
+          <textarea
+            class="field__input"
+            id="noticeMessage"
+            rows="3"
+            data-i18n-placeholder="customNoticeMessagePlaceholder"
+          ></textarea>
+          <p class="field__help" data-i18n="customNoticeMessageHelp"></p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="card__title" data-i18n="backupHeading"></h2>
 
         <div class="actions">
-          <button class="button" id="save" type="button" data-i18n="saveButton"></button>
-          <span class="message" id="message" role="status" aria-live="polite"></span>
+          <button class="button button--secondary" id="export" type="button" data-i18n="exportButton"></button>
+          <button class="button button--secondary" id="import" type="button" data-i18n="importButton"></button>
+          <!-- Hidden: the Import button is the visible affordance, because a
+               bare file input cannot be styled to match the rest. -->
+          <input type="file" id="importFile" accept="application/json,.json" hidden />
+          <span class="message" id="backupMessage" role="status" aria-live="polite"></span>
         </div>
-      </main>
+
+        <p class="field__help" data-i18n="backupHelp"></p>
+      </section>
+
+      <div class="actions">
+        <button class="button" id="save" type="button" data-i18n="saveButton"></button>
+        <span class="message" id="message" role="status" aria-live="polite"></span>
+      </div>
 
       <!-- The permission can only be granted by the user in about:addons, so
            this is a status readout with instructions rather than a control. -->
@@ -51,8 +107,7 @@
       </section>
     </div>
 
-    <!-- Order matters: config.js defines the URL rule, i18n.js the lookup. -->
-    <script src="config.js"></script>
+    <!-- localizeDocument() fills the data-i18n attributes, so i18n.js goes first. -->
     <script src="i18n.js"></script>
     <script src="options.js"></script>
   </body>

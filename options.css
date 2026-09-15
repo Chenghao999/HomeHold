@@ -5,21 +5,39 @@
   --muted: #5c5c66;
   --border: #dcdce2;
   --accent: #4f46e5;
+  --accent-fg: #ffffff;
   --ok: #16794a;
   --err: #c0392b;
 }
 
+/* Dark values live in one block each because the two selectors below have the
+   same specificity -- :not() takes the specificity of its argument -- so only
+   source order decides. The [data-theme] rule is last on purpose: an explicit
+   choice has to beat the system setting whichever way round they disagree. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #17171a;
     --surface: #202024;
     --fg: #f2f2f4;
     --muted: #a0a0ab;
     --border: #35353c;
     --accent: #a5b4fc;
+    --accent-fg: #17171a;
     --ok: #5ed49a;
     --err: #ff8a7a;
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: #17171a;
+  --surface: #202024;
+  --fg: #f2f2f4;
+  --muted: #a0a0ab;
+  --border: #35353c;
+  --accent: #a5b4fc;
+  --accent-fg: #17171a;
+  --ok: #5ed49a;
+  --err: #ff8a7a;
 }
 
 * {
@@ -65,6 +83,11 @@ body {
   gap: 24px;
 }
 
+.card__title {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
 .field {
   display: grid;
   gap: 6px;
@@ -88,6 +111,13 @@ body {
   background: var(--bg);
   color: var(--fg);
   font: inherit;
+}
+
+/* Only the notice text is a textarea, and it should grow downwards only --
+   horizontal resizing would break the card layout. */
+textarea.field__input {
+  min-height: 4.5rem;
+  resize: vertical;
 }
 
 .field__input:focus-visible {
@@ -121,6 +151,9 @@ body {
 .actions {
   display: flex;
   align-items: center;
+  /* The backup row carries two buttons plus a message, which does not fit on
+     one line in a narrow window. */
+  flex-wrap: wrap;
   gap: 14px;
 }
 
@@ -129,16 +162,16 @@ body {
   border: 1px solid transparent;
   border-radius: 6px;
   background: var(--accent);
-  color: #ffffff;
+  color: var(--accent-fg);
   font: inherit;
   font-weight: 600;
   cursor: pointer;
 }
 
-@media (prefers-color-scheme: dark) {
-  .button {
-    color: #17171a;
-  }
+.button--secondary {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--fg);
 }
 
 .button:hover {

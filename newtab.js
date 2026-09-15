@@ -9,10 +9,16 @@
  */
 
 const noticeEl = document.getElementById("notice");
+const noticeTitleEl = document.getElementById("noticeTitle");
 const noticeTextEl = document.getElementById("noticeText");
 
-function showNotice(message) {
-  noticeTextEl.textContent = message;
+/**
+ * `config` is optional: when storage itself failed there is nothing to read a
+ * custom notice out of, so the localized defaults stand in.
+ */
+function showNotice(message, config) {
+  noticeTitleEl.textContent = config?.noticeTitle || t("noticeTitle");
+  noticeTextEl.textContent = config?.noticeMessage || message;
   noticeEl.hidden = false;
 }
 
@@ -32,19 +38,18 @@ async function init() {
   }
 
   if (!config.enabled) {
-    showNotice(t("noticeDisabled"));
+    showNotice(t("noticeDisabled"), config);
     return;
   }
 
-  const url = String(config.navUrl || "").trim();
-  if (!isSafeNavigationUrl(url)) {
-    showNotice(t("noticeNotConfigured"));
+  if (!isSafeNavigationUrl(config.navUrl)) {
+    showNotice(t("noticeNotConfigured"), config);
     return;
   }
 
   // replace() rather than assign(), so the Back button skips this page instead
   // of landing on an empty new tab.
-  window.location.replace(url);
+  window.location.replace(config.navUrl);
 }
 
 init();

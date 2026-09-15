@@ -8,13 +8,24 @@
   --accent: #4f46e5;
 }
 
+/* Dark values live in one block each because the two selectors below have the
+   same specificity -- :not() takes the specificity of its argument -- so only
+   source order decides. The [data-theme] rule is last on purpose: an explicit
+   choice has to beat the system setting whichever way round they disagree. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #17171a;
     --fg: #f2f2f4;
     --muted: #a0a0ab;
     --accent: #a5b4fc;
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: #17171a;
+  --fg: #f2f2f4;
+  --muted: #a0a0ab;
+  --accent: #a5b4fc;
 }
 
 * {

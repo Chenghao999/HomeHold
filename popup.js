@@ -4,7 +4,8 @@
  * Toolbar popup: the quick way to change the navigation URL.
  *
  * Deliberately a compact subset of the options page. Both write through the
- * same config.js helpers, so they cannot save different shapes of data.
+ * same defaults.js helpers, and saveConfig() patches rather than replaces, so
+ * saving here cannot wipe the theme or notice text set on the options page.
  */
 
 const SAVED_MESSAGE_MS = 1200;
@@ -50,14 +51,16 @@ saveButton.addEventListener("click", async () => {
     return;
   }
 
+  let saved;
   try {
-    await saveConfig({ navUrl, enabled: enabledInput.checked });
+    saved = await saveConfig({ navUrl, enabled: enabledInput.checked });
   } catch {
     setMessage(t("writeFailedMessage"), "error");
     return;
   }
 
-  urlInput.value = navUrl;
+  // Show what was stored, not what was typed.
+  urlInput.value = saved.navUrl;
   setMessage(t("savedMessage"), "ok");
 });
 

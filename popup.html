@@ -4,6 +4,10 @@
     <meta charset="utf-8" />
     <title data-i18n="optionsTitle">HomeHold settings</title>
     <link rel="stylesheet" href="popup.css" />
+    <!-- defaults.js supplies the URL rule and the theme default; theme.js needs
+         both before the body paints. -->
+    <script src="defaults.js"></script>
+    <script src="theme.js"></script>
   </head>
   <body>
     <h1 class="popup__title" data-i18n="optionsHeading">HomeHold</h1>
@@ -32,8 +36,7 @@
 
     <a class="popup__link" id="moreSettings" href="#" data-i18n="moreSettings"></a>
 
-    <!-- Order matters: config.js defines the URL rule, i18n.js the lookup. -->
-    <script src="config.js"></script>
+    <!-- localizeDocument() fills the data-i18n attributes, so i18n.js goes first. -->
     <script src="i18n.js"></script>
     <script src="popup.js"></script>
   </body>

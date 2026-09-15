@@ -68,6 +68,62 @@
     "message": "保存配置失败。"
   },
 
+  "appearanceHeading": {
+    "message": "外观"
+  },
+  "themeLabel": {
+    "message": "主题"
+  },
+  "themeAuto": {
+    "message": "跟随系统"
+  },
+  "themeLight": {
+    "message": "浅色"
+  },
+  "themeDark": {
+    "message": "深色"
+  },
+  "themeHelp": {
+    "message": "「跟随系统」会使用操作系统的浅色或深色设置。"
+  },
+  "customNoticeTitleLabel": {
+    "message": "提示页标题"
+  },
+  "customNoticeTitlePlaceholder": {
+    "message": "HomeHold"
+  },
+  "customNoticeTitleHelp": {
+    "message": "显示在新标签页回退到的那个页面上。留空则使用默认标题。"
+  },
+  "customNoticeMessageLabel": {
+    "message": "提示页正文"
+  },
+  "customNoticeMessagePlaceholder": {
+    "message": "尚未配置导航页。"
+  },
+  "customNoticeMessageHelp": {
+    "message": "会替换掉「为什么没有跳转」的默认说明。留空则使用默认文案。"
+  },
+
+  "backupHeading": {
+    "message": "备份"
+  },
+  "backupHelp": {
+    "message": "导出会把当前配置存成一个文件。导入会立即生效，并覆盖本页所有设置。"
+  },
+  "exportButton": {
+    "message": "导出"
+  },
+  "importButton": {
+    "message": "导入"
+  },
+  "importedMessage": {
+    "message": "配置已导入"
+  },
+  "importFailedMessage": {
+    "message": "这个文件不是 HomeHold 的配置文件。"
+  },
+
   "incognitoAllowed": {
     "message": "已允许在隐私窗口中运行"
   },
